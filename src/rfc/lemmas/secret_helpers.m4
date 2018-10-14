@@ -184,9 +184,7 @@ lemma_matching_sessions/* [reuse, use_induction, hide_lemma=posths_rms]:
     not (role = role2) &
     KU(rms)@k ==>
       (Ex tid3 x #r. RevDHExp(tid3, actor, x)@r & #r < #i) |
-      (Ex tid4 y #r. RevDHExp(tid4, peer, y)@r & #r < #j) |
-      (Ex rms2 #r. RevealPSK(actor, rms2)@r & #r < #k) |
-      (Ex rms2 #r. RevealPSK(peer, rms2)@r & #r < #k)"
+      (Ex tid4 y #r. RevDHExp(tid4, peer, y)@r & #r < #j)"
 */
 
 lemma_sig_origin/* [reuse]:

@@ -205,6 +205,7 @@ lemma matching_rms_actors [reuse]:
      actor = actor2 & tid = tid2"
 !>)
 
+/*
 define(<!lemma_matching_sessions!>, <!
 lemma matching_sessions [reuse, use_induction, hide_lemma=posths_rms]:
   "All tid tid2 actor actor2 role role2 peer peer2 rms messages #i #j #k.
@@ -217,6 +218,19 @@ lemma matching_sessions [reuse, use_induction, hide_lemma=posths_rms]:
       (Ex rms2 #r. RevealPSK(actor, rms2)@r & #r < #k) |
       (Ex rms2 #r. RevealPSK(peer, rms2)@r & #r < #k)"
 !>)
+*/
+
+define(<!lemma_matching_sessions!>, <!
+lemma matching_sessions [reuse, use_induction, hide_lemma=posths_rms]:
+  "All tid tid2 actor actor2 role role2 peer peer2 rms messages #i #j #k.
+    running(RMS, actor, role, peer2, rms, messages)@i &
+    running2(RMS, peer, role2, actor2, rms, messages)@j &
+    not (role = role2) &
+    KU(rms)@k ==>
+      (Ex tid3 x #r. RevDHExp(tid3, actor, x)@r & #r < #i) |
+      (Ex tid4 y #r. RevDHExp(tid4, peer, y)@r & #r < #j)"
+!>)
+
 
 define(<!lemma_sig_origin!>, <!
 lemma sig_origin [reuse]:
