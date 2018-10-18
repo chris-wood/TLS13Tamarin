@@ -163,16 +163,15 @@ lemma_invariant_post_hs [reuse, use_induction, hide_lemma=posths_rms]:
       peer = peer2 & rms = rms2 & msgs = msgs2 & hs = hs2"
 */
 
-lemma_handshake_secret/* [reuse, use_induction, hide_lemma=posths_rms_weak]:
+lemma_handshake_secret/* [reuse, use_induction]:
   "All tid actor peer role hs aas #i #k.
     commit(HS, actor, role, hs)@i &
     commit(Identity, actor, role, peer, <aas, 'auth'>)@i &
     KU(hs)@k ==>
         (Ex #r. RevLtk(peer)@r & #r < #i) |
+        (Ex #r. RevSS(peer)@r & #r < #i) |
         (Ex tid3 x #r. RevDHExp(tid3, peer, x)@r & #r < #i) |
-        (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) |
-        (Ex rms #r. RevealPSK(actor, rms)@r & #r < #k) |
-        (Ex rms #r. RevealPSK(peer, rms)@r & #r < #k)"
+        (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i)"
 */
 
 lemma_secret_session_keys/*:
@@ -186,7 +185,7 @@ lemma_secret_session_keys/*:
         ==> not Ex #j. K(kr)@j"
 */
 
-lemma_pfs_handshake_secret/* [reuse, hide_lemma=posths_rms_weak]:
+lemma_pfs_handshake_secret/* [reuse]:
   "All tid actor peer role hs aas psk_ke_mode #i #k.
     commit(HS, actor, role, hs)@i &
     running(Mode, actor, role, psk_ke_mode)@i &
@@ -194,10 +193,9 @@ lemma_pfs_handshake_secret/* [reuse, hide_lemma=posths_rms_weak]:
     KU(hs)@k &
     (not psk_ke_mode = psk_ke) ==>
         (Ex #r. RevLtk(peer)@r & #r < #i) |
+        (Ex #r. RevSS(peer)@r & #r < #i) |
         (Ex tid3 x #r. RevDHExp(tid3, peer, x)@r & #r < #i) |
-        (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) |
-        (Ex rms #r. RevealPSK(actor, rms)@r & #r < #i) |
-        (Ex rms #r. RevealPSK(peer, rms)@r & #r < #i)"
+        (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i)"
 */
 
 lemma_secret_session_keys_pfs/*:
@@ -228,7 +226,7 @@ lemma_consistent_nonces/* [reuse]:
 */
 
 
-lemma_auth_psk/* [reuse, use_induction, hide_lemma=posths_rms_weak]:
+lemma_auth_psk/* [reuse, use_induction]:
   "All tid tid2 actor actor2 role role2 peer peer2 rms messages aas #i #j #k.
     running(RMS, actor, role, peer2, rms, messages)@i &
     running2(RMS, peer, role2, actor2, rms, messages)@j &
@@ -236,7 +234,8 @@ lemma_auth_psk/* [reuse, use_induction, hide_lemma=posths_rms_weak]:
     not (role = role2)
      ==>
       peer2 = peer |
-      Ex #r. RevLtk(peer2)@r & #r < #k"
+      (Ex #r. RevLtk(peer2)@r & #r < #k) |
+      (Ex #l. RevSS(peer2)@l & #l < #k)"
 */
 
 /*
