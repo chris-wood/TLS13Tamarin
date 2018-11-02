@@ -187,6 +187,12 @@ lemma_matching_sessions/* [reuse, use_induction, hide_lemma=posths_rms]:
       (Ex tid4 y #r. RevDHExp(tid4, peer, y)@r & #r < #j)"
 */
 
+lemma_sig_origin_client/* [reuse]:
+  "All certificate certificate_request_context signature verify_data hs_key sig_messages ltkA  #i.
+        KU(senc{Certificate, CertificateVerify, Finished}hs_key)@i & (signature = sign{sig_messages}ltkA) ==>
+      (Ex #j. KU(ltkA)@j & #j < i) | (Ex #k. UseLtk(ltkA, signature)@k & #k < #i)"
+*/
+
 lemma_sig_origin/* [reuse]:
   "All certificate certificate_request_context signature verify_data hs_key ss_key sig_messages ssA  #i.
         KU(senc{Certificate, CertificateVerify, Finished}hs_key)@i & (signature = hmac(ss_key,sig_messages)) & DeriveFromSS(ssA, ss_key)@i ==>

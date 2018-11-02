@@ -231,6 +231,12 @@ lemma matching_sessions [reuse, use_induction, hide_lemma=posths_rms]:
       (Ex tid4 y #r. RevDHExp(tid4, peer, y)@r & #r < #j)"
 !>)
 
+define(<!lemma_sig_origin_client!>, <!
+lemma sig_origin_client [reuse]:
+  "All certificate certificate_request_context signature verify_data hs_key sig_messages ltkA  #i.
+        KU(senc{Certificate, CertificateVerify, Finished}hs_key)@i & (signature = sign{sig_messages}ltkA) ==>
+      (Ex #j. KU(ltkA)@j & #j < i) | (Ex #k. UseLtk(ltkA, signature)@k & #k < #i)"
+!>)      
 
 define(<!lemma_sig_origin!>, <!
 lemma sig_origin [reuse]:
@@ -332,10 +338,9 @@ lemma secret_session_keys [hide_lemma=sig_origin,hide_lemma=posths_rms]:
   "All tid actor peer kw kr pas #i.
       SessionKey(tid, actor, peer, <pas, 'auth'>, <kw, kr>)@i &
       not (Ex #r. RevLtk(peer)@r & #r < #i) &
+      not (Ex #r. RevSS(peer)@r & #r < #i) &
       not (Ex tid3 x #r. RevDHExp(tid3, peer, x)@r & #r < #i) &
-      not (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) &
-      not (Ex rms #r. RevealPSK(actor, rms)@r) &
-      not (Ex rms #r. RevealPSK(peer, rms)@r)
+      not (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) 
     ==> not Ex #j. K(kr)@j"
 !>)
 
@@ -359,10 +364,9 @@ lemma secret_session_keys_pfs [hide_lemma=sig_origin,hide_lemma=posths_rms]:
       SessionKey(tid, actor, peer, <pas, 'auth'>, <kw, kr>)@i &
       running(Mode, actor, role, psk_ke_mode)@i &
       not (Ex #r. RevLtk(peer)@r & #r < #i) &
+      not (Ex #r. RevSS(peer)@r & #r < #i) &
       not (Ex tid3 x #r. RevDHExp(tid3, peer, x)@r & #r < #i) &
       not (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) &
-      not (Ex rms #r. RevealPSK(actor, rms)@r & #r < #i) &
-      not (Ex rms #r. RevealPSK(peer, rms)@r & #r < #i) &
       not (psk_ke_mode = psk_ke)
     ==> not Ex #j. K(kr)@j"
 !>)

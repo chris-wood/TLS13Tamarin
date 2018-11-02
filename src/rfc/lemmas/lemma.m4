@@ -135,6 +135,12 @@ lemma_rms_derives_hs/*[reuse]:
          (Ex #l. RevealPSK(peer, rms)@l & #l < #k)"
 */
 
+lemma_sig_origin_client/* [reuse]:
+  "All certificate certificate_request_context signature verify_data hs_key sig_messages ltkA  #i.
+        KU(senc{Certificate, CertificateVerify, Finished}hs_key)@i & (signature = sign{sig_messages}ltkA) ==>
+      (Ex #j. KU(ltkA)@j & #j < i) | (Ex #k. UseLtk(ltkA, signature)@k & #k < #i)"
+*/
+
 lemma_sig_origin/* [reuse]:
   "All certificate certificate_request_context signature verify_data hs_key ss_key sig_messages ssA #i.
         KU(senc{Certificate, CertificateVerify, Finished}hs_key)@i & (signature = hmac(ss_key,sig_messages)) & DeriveFromSS(ssA, ss_key)@i ==>
@@ -178,10 +184,9 @@ lemma_secret_session_keys/*:
   "All tid actor peer kw kr pas #i.
       SessionKey(tid, actor, peer, <pas, 'auth'>, <kw, kr>)@i &
       not (Ex #r. RevLtk(peer)@r & #r < #i) &
+      not (Ex #r. RevSS(peer)@r & #r < #i) &
       not (Ex tid3 x #r. RevDHExp(tid3, peer, x)@r & #r < #i) &
-      not (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) &
-      not (Ex rms #r. RevealPSK(actor, rms)@r) &
-      not (Ex rms #r. RevealPSK(peer, rms)@r)
+      not (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) 
         ==> not Ex #j. K(kr)@j"
 */
 
@@ -202,10 +207,9 @@ lemma_secret_session_keys_pfs/*:
   "All tid actor peer kw kr pas #i.
       SessionKey(tid, actor, peer, <pas, 'auth'>, <kw, kr>)@i &
       not (Ex #r. RevLtk(peer)@r & #r < #i) &
+      not (Ex #r. RevSS(peer)@r & #r < #i) &
       not (Ex tid3 x #r. RevDHExp(tid3, peer, x)@r & #r < #i) &
-      not (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i) &
-      not (Ex rms #r. RevealPSK(actor, rms)@r) &
-      not (Ex rms #r. RevealPSK(peer, rms)@r)
+      not (Ex tid4 y #r. RevDHExp(tid4, actor, y)@r & #r < #i)
         ==> not Ex #j. K(kr)@j"
 */
 
